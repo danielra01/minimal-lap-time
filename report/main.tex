@@ -1,0 +1,169 @@
+\documentclass[12pt,a4paper,twoside]{amsart}  % Package for mathematical article
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+% Nice Font and some basic things
+\usepackage{libertine}
+\usepackage[libertine]{newtxmath}
+\usepackage[nospace]{varioref}
+\usepackage[ngerman,english]{babel}
+\usepackage{mathrsfs}  % For using mathsrc and not overwriting mathcal
+\usepackage[top=3cm,bottom=2.5cm,left=3cm,right=2.5cm]{geometry}
+\usepackage{float}
+\usepackage{graphicx}
+
+\usepackage{parskip} % Use spaces between paragraphs instead of parindent
+\setlength{\parskip}{0.3\baselineskip plus 2pt} 
+\raggedbottom % Do not stretch content on a page instead leave an empty space in the bottom 
+\sloppy  % This can help with linebreaks but is possibly bad for overfull hboxes
+\usepackage{etoolbox} % to do the following
+\AtBeginEnvironment{proof}{\vspace*{-2\parskip}} % Avoid big space at begin of proof
+
+% Nice Referencing
+\usepackage{xurl} % For nice url formatting
+\usepackage{hyperref} % Se hypersetup below
+\urlstyle{same}
+\usepackage[noabbrev]{cleveref}
+
+% Math packages
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage{derivative} % For partial derivatives with \pdv{function}{variables}
+\usepackage{dsfont} % For the indicator function \mathds{1}
+
+% New math commands that are formated for math mode
+\DeclareMathOperator{\img}{Im}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\id}{Id}
+\DeclareMathOperator{\vol}{vol}
+\DeclareMathOperator{\hodgestar}{\ast}
+\DeclareMathOperator{\Hom}{Hom}
+
+% Other commands
+\newcommand{\interior}[1]{{\kern0pt#1}^{\mathrm{o}}}
+\newcommand{\into}{\hookrightarrow}
+\newcommand{\onto}{\twoheadrightarrow}
+\newcommand{\opartial}{{\overline{\partial}}}
+
+
+\usepackage{enumitem} % Control the format of \enumerate \itemize and \description
+\renewcommand\labelitemi{--} % This doesn't belong to package enumitem but can be used to customize itemize
+
+% Definitions for amsthm
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[subsection]
+\newtheorem*{thm*}{Theorem}
+\newtheorem{lm}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{fact}[thm]{Fact}
+\newtheorem{q}[thm]{Question}
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{nota}[thm]{Notation}
+\newtheorem{exmp}[thm]{Example}
+\newtheorem{xca}[thm]{Exercise}
+\newtheorem*{set}{Setting}
+\theoremstyle{remark}
+\newtheorem{rem}[thm]{Remark}
+\Crefname{thm}{Theorem}{Theorems}
+\Crefname{lm}{Lemma}{Lemmas}
+\Crefname{prop}{Proposition}{Propositions}
+\Crefname{cor}{Corollary}{Corollaries}
+\Crefname{fact}{Fact}{Facts}
+\Crefname{q}{Question}{Questions}
+\Crefname{defn}{Definition}{Definitions}
+\Crefname{nota}{Notation}{Notations}
+\Crefname{exmp}{Example}{Examples}
+\Crefname{xca}{Exercise}{Exercises}
+\Crefname{rem}{Remark}{Remarks}
+
+\Crefname{enumi}{Property}{Properties} % For a nice referenceing of lists (label needs to be after \item)
+\newcommand{\creflmpart}[2]{%
+	\nameCref{#1}~\hyperref[#2]{\labelcref*{#1}~(\ref*{#2})}%
+}
+
+\Crefname{equation}{}{} % Set referencing style of equation to empy
+
+\usepackage{tikz-cd} % For plots and drawings
+\usetikzlibrary{decorations.markings}
+
+\usepackage{float} % positioning figures and tables
+\renewcommand\thepart{\rm \Roman{part}} % Nicer indentation of lists
+\setdescription{labelindent=1 em, leftmargin=2 em}
+\setitemize[1]{labelindent=1 em, leftmargin=2 em}
+\setenumerate[1]{labelindent=0cm, leftmargin=*, widest=iiii}
+
+% Bibliography
+\usepackage[
+backend=biber,
+style=alphabetic,
+maxnames=10,
+maxalphanames=10,
+url=true]{biblatex}
+\addbibresource{./bibliography.bib}
+
+% TODO functionality:
+\usepackage{xcolor}
+\newcommand\TODO[1]{\textcolor{red}{#1}}
+% If all todo should be hidden at once just uncomment this line
+% \renewcommand\TODO[1]{}
+\newcommand\CITATION[1]{\textcolor{green}{#1}}
+
+
+% Begin of document
+\title{Minimum Lap Time Optimization}
+\author{Álvaro Galisteo Bermúdez, Daniel Rath, Anastasiia Kliushnik}
+\date{\today}
+
+\setcounter{tocdepth}{2}  % Show sections and subsections in table of contents
+\numberwithin{equation}{section} % Equations should have their own counter and should be numbered within a section to get (sectionnumber.equation)
+
+
+\makeatletter %----------------------------------------------
+
+% Setup hyperref
+\hypersetup{
+	pdfauthor={\authors},
+	pdftitle={\@title},
+	colorlinks,
+	linkcolor=[rgb]{0.2,0.2,0.6},
+	citecolor=[rgb]{0.2,0.6,0.2},
+	urlcolor=[rgb]{0.6,0.2,0.2}}
+\makeatother
+%----------------------------------------------
+
+% commands for temporarily enabling and disabling toc entires
+\let\oldaddcontentsline\addcontentsline
+\newcommand{\stoptocentries}{\renewcommand{\addcontentsline}[3]{}}
+\newcommand{\starttocentries}{\let\addcontentsline\oldaddcontentsline}
+
+% Begin of document -----------------------------------------
+\begin{document}
+	\newgeometry{
+		includeall,
+		bindingoffset=0cm,
+		margin=2cm,
+		marginparsep=0cm,
+		marginparwidth=0cm,
+		top=0cm
+	}
+	\begin{abstract}
+    %Example of an abstract from other project 
+	%This report studies hand-written digit classification on the \emph{sklearn} Digits dataset using multinomial logistic regression trained with gradient-based methods. We cast training as a finite-sum convex optimization problem and compare full-batch gradient descent (full-GD) against mini-batch stochastic gradient descent (SGD) in terms of objective decrease, validation/test accuracy, and wall-clock time.
+
+	%Based on systematic hyperparameter sweeps, we observe that SGD reaches high validation accuracy in substantially less wall-clock time, while full-GD exhibits smoother, deterministic objective trajectories but incurs higher per-iteration cost. Both approaches achieve strong test performance, with SGD providing the best time-to-accuracy trade-off in our experimental setup.
+
+	%This report documents the final project for the lecture \emph{Basics in Applied Mathematics}, offered in the winter term 2025/2026 within the master’s program \emph{Mathematics in Data and Technology} at the University of Freiburg.
+	\end{abstract}
+	
+	
+    \maketitle
+	\tableofcontents
+	\newpage
+    \restoregeometry
+	\pagenumbering{arabic}
+	% where the \include{} are
+	\thispagestyle{empty}
+	\printbibliography
+\end{document}

@@ -18,4 +18,4 @@ The following tools have been used for the provided tasks:
 - what it was used for
 -->
 
-**Authors:** Daniel Rath, `<Name 2>`, `<Name 3>`
+**Authors:** Daniel Rath, Álvaro Galisteo Bermúdez, Anastasiia Kliushnik

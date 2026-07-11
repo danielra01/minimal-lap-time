@@ -12,7 +12,7 @@ With the position given in global coordinates $(x,y)$, velocity $v$, heading $\p
     \dot{y} &= v \sin(\psi) \\
     \dot{\psi} &= \frac{v}{L} \tan(\delta) \\
     \dot{v} &= a
-\end{align*}\TODO{Add references!}
+\end{align*}\TODO{Add references!}\TODO{ADD $L$ as length of wheelbase and $a$ as acceleration of the car}
 However, for driving around a given track it is inconvenient to use global coordinates because it is more complicate to formulate the constraints. Additionally,we only need the position on the track and do not care for the absolute position in global coordinates.
 
 Therefore, we want to formulate the model using track coordinates. The centerline distance traveled will be given as $s$. Also $e_y$ denotes the distance from the centerline, $e_\psi$ denotes the angle between the cars heading and the tangent of the centerline and $v$ still denotes the velocity of the vehicle.
@@ -38,7 +38,7 @@ The cars own heading changes because of steering and the heading of the track ch
     \dot e_\psi = \frac{v}{L} \tan(\delta) - \kappa(s)\dot s.
 \end{align*}
 
-This yields to the following model
+This yields the following model
 \begin{align*}
     z(t) =  \begin{bmatrix}
                 s(t) \\
@@ -52,7 +52,7 @@ This yields to the following model
                 v(t) \sin(e_\psi(t))\\
                 \frac{v}{L}\tan(\delta(t)) - \kappa(s(t))\dot s(t)\\
                 a(t)
-            \end{bmatrix}
+            \end{bmatrix}=: f(z(t),u(t))
 \end{align*}
 
 In order to formulate the optimization problem, we need to have some controls of the car. These are given as 
@@ -61,12 +61,66 @@ In order to formulate the optimization problem, we need to have some controls of
 \end{align*}
 with $a$ being the acceleration and $\delta$ being the steering angle. With this, we can finally formulate the optimization problem. 
 
-\subsection{Formulation of the optimization problem}
+\subsection{Formulation of the optimization problem}\;\\
 Using the model above, we can formulate the problem as follows
-\begin{align*}
-    &\underset{z,u,T}{\text{minimize }} T\\
-    &\text{subject to} 
-\end{align*}
+\begin{align}
+    \underset{z(\cdot),\,u(\cdot),\,T}{\operatorname{minimize}}
+    \quad & T
+    \label{eq:objective}
+    \\[0.5em]
+    \text{subject to}
+    \quad
+    & \dot{z}(t) = f\big(z(t),u(t)\big),
+    & t \in [0,T],
+    \label{eq:dynamics}
+    \\[0.3em]
+    & -\frac{w\big(s(t)\big)-b}{2}
+      \leq e_y(t)
+      \leq
+      \frac{w\big(s(t)\big)-b}{2},
+    \label{eq:track_constraint}
+    \\[0.3em]
+    & -a_{\min} \leq a(t) \leq a_{\max},
+    \label{eq:acceleration_constraint}
+    \\[0.3em]
+    & -\delta_{\max} \leq \delta(t) \leq \delta_{\max},
+    \label{eq:steering_constraint}
+    \\[0.3em]
+    & 0 \leq v(t) \leq v_{\max},
+    \label{eq:velocity_constraint}
+    \\[0.3em]
+    & \left|
+        \frac{v(t)^2}{L}\tan\big(\delta(t)\big)
+      \right|
+      \leq a_{y,\max},
+    \label{eq:lateral_acceleration_constraint}
+    \\[0.3em]
+    & s(0)=0,
+    \qquad
+      s(T)=S,
+    \label{eq:position_boundary_conditions}
+    \\[0.3em]
+    & v(0)=0,
+    \qquad
+      e_y(0)=0,
+    \qquad
+      e_\psi(0)=0.
+    \label{eq:initial_conditions}
+\end{align}
+
+The constants used in the optimal-control problem are defined as follows:
+\begin{description}
+    \item[\(w(s)\)] track width at the longitudinal position \(s\),
+    \item[\(b\)] width of the vehicle,
+    \item[\(L\)] wheelbase of the vehicle,
+    \item[\(a_{\min}\)] magnitude of the maximum permissible deceleration,
+    \item[\(a_{\max}\)] maximum permissible acceleration,
+    \item[\(\delta_{\max}\)] maximum absolute steering angle,
+    \item[\(v_{\max}\)] maximum permissible velocity,
+    \item[\(a_{y,\max}\)] maximum permissible lateral acceleration,
+    \item[\(S\)] total length of the track.
+\end{description}
+
 
 
 

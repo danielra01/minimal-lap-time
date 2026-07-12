@@ -1,67 +1,16 @@
-\section{The optimization problem}
+\section{Optimal control formulation}
 In order to formulate our optimization problem, we first need to decide on some simplifications. The goal of this project is not to focus on the vehicular dynamics of a race car, but rather on the optimization problem itself.
 
 Therefore, we decided to use the commonly used bicycle model to describe the dynamics of the car.
 
-\subsection{The bicycle model}\;\\
-The commonly used kinematic bicycle model is a simplification of the dynamics of a car. \TODO{Add actual simplifications}
-
-With the position given in global coordinates $(x,y)$, velocity $v$, heading $\psi$ and with steering angle $\delta$ the model is given by the following ordinary differential equations
-\begin{align*}
-    \dot{x} &= v \cos(\psi) \\
-    \dot{y} &= v \sin(\psi) \\
-    \dot{\psi} &= \frac{v}{L} \tan(\delta) \\
-    \dot{v} &= a
-\end{align*}\TODO{Add references!}\TODO{ADD $L$ as length of wheelbase and $a$ as acceleration of the car}
-However, for driving around a given track it is inconvenient to use global coordinates because it is more complicate to formulate the constraints. Additionally,we only need the position on the track and do not care for the absolute position in global coordinates.
-
-Therefore, we want to formulate the model using track coordinates. The centerline distance traveled will be given as $s$. Also $e_y$ denotes the distance from the centerline, $e_\psi$ denotes the angle between the cars heading and the tangent of the centerline and $v$ still denotes the velocity of the vehicle.
-
-Now, we can split the velocity into the forward component along the track tangent given as $v \cos (e_\psi)$ and the sideways component normal to the track tangent given as $v \sin(e_\psi)$, which directly leads to $\dot{e_y}=v\sin(e_\psi)$ because the lateral offset changes exactly by the sideways component of the velocity.
-
-On a curved track, we need to take into account that a car with lateral offset to the centerline needs to travel a different distance compared to a care being on the centerline in order to achieve the same progress. This leads to the relation \TODO{EXPLAIN!}
-\begin{align*}
-    \dot s = \frac{v \cos(e_\psi)}{(1-\kappa(s)e_y)}, 
-\end{align*}
-with $\kappa$ being the curvature of the track. 
-
-Now, for the heading deviation, we calculate 
-\begin{align*}
-    e_\psi = \psi - \psi_c(s)
-\end{align*}
-and differentiating yields
-\begin{align*}
-    \dot{e}_\psi = \dot\psi - \dot{\psi}_c(s)\dot{s}.
-\end{align*}
-The cars own heading changes because of steering and the heading of the track changes because of the curvature of the track. Therefore, we get
-\begin{align*}
-    \dot e_\psi = \frac{v}{L} \tan(\delta) - \kappa(s)\dot s.
-\end{align*}
-
-This yields the following model
-\begin{align*}
-    z(t) =  \begin{bmatrix}
-                s(t) \\
-                e_y(t)\\
-                e_\psi(t)\\
-                v(t)
-            \end{bmatrix}
-    \qquad \qquad 
-    \dot z(t) = \begin{bmatrix}
-                \dot s(t) \\
-                v(t) \sin(e_\psi(t))\\
-                \frac{v}{L}\tan(\delta(t)) - \kappa(s(t))\dot s(t)\\
-                a(t)
-            \end{bmatrix}=: f(z(t),u(t))
-\end{align*}
-
-In order to formulate the optimization problem, we need to have some controls of the car. These are given as 
-\begin{align*}
-    u(t) = \begin{bmatrix} a(t) \\ \delta(t) \end{bmatrix}
-\end{align*}
-with $a$ being the acceleration and $\delta$ being the steering angle. With this, we can finally formulate the optimization problem. 
-
-\subsection{Formulation of the optimization problem}\;\\
+\TODO{We need to expand the section explaining carefully: 
+\begin{enumerate}
+    \item Decision variables
+    \item Objective
+    \item Constraints
+    \item Boundary conditions
+\end{enumerate}
+}
 Using the model above, we can formulate the problem as follows
 \begin{align}
     \underset{z(\cdot),\,u(\cdot),\,T}{\operatorname{minimize}}

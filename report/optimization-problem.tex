@@ -1,4 +1,4 @@
-\section{optimal control formulation}
+\section{Optimization Problem}
 \subsection{Formulation of the optimization problem}\;\\
 \TODO{We need to expand the section explaining carefully: 
 \begin{enumerate}
@@ -22,7 +22,12 @@ Using the model above, we can formulate the problem as follows
     \\[0.5em]
     \text{subject to}
     \quad
-    & \dot{z}(t) = f\big(z(t),u(t)\big),
+    & \dot{z}(t) = \begin{bmatrix}
+                \dot s(t) \\
+                v(t) \sin(e_\psi(t))\\
+                \frac{v}{L}\tan(\delta(t)) - \kappa(s(t))\dot s(t)\\
+                a(t)
+            \end{bmatrix} =: f\big(z(t),u(t)\big),
     & t \in [0,T],
     \label{eq:dynamics}
     \\[0.3em]
@@ -60,7 +65,7 @@ Using the model above, we can formulate the problem as follows
     \label{eq:initial_conditions}
 \end{align}
 
-The constants used in the optimal-control problem are defined as follows:
+The constants used in the definition of the optimization problem are defined as follows:
 \begin{description}
     \item[\(w(s)\)] track width at the longitudinal position \(s\),
     \item[\(b\)] width of the vehicle,

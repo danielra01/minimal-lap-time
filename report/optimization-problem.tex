@@ -1,4 +1,4 @@
-\section{The optimization problem}
+\section{Optimal control formulation}
 In order to formulate our optimization problem, we first need to decide on some simplifications. The goal of this project is not to focus on the vehicular dynamics of a race car, but rather on the optimization problem itself.
 
 Therefore, we decided to use the commonly used kinematic bicycle model to describe the dynamics of the car.
@@ -64,6 +64,14 @@ In order to formulate the optimization problem, we need to have some controls of
 with $a$ being the acceleration and $\delta$ being the steering angle. With this, we can finally formulate the optimization problem. 
 
 \subsection{Formulation of the optimization problem}\;\\
+\TODO{We need to expand the section explaining carefully: 
+\begin{enumerate}
+    \item Decision variables
+    \item Objective
+    \item Constraints
+    \item Boundary conditions
+\end{enumerate}
+}
 Using the model above, we can formulate the problem as follows
 \begin{align}
     \underset{z(\cdot),\,u(\cdot),\,T}{\operatorname{minimize}}

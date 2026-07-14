@@ -6,3 +6,11 @@
     \item What assumpions we use ? 
 \end{enumerate}
 }
+
+The objective of this project is to compute a trajectory that allows a race car to complete a given race track in minimum time. Unlike path-following problems, where the trajectory is prescribed in advance, both the trajectory and the control inputs are optimized while satisfying the physical limitations of the vehicle.
+
+The optimization is carried out on a racing track located in Freiburg. The image of the track is processed to extract the boundaries, from which the centerline is obtained. Using this centerline, we compute the curvature profile and determine the track width along the circuit. These quantities provide a mathematical description of the track and serve as the geometric input for the optimization problem.
+
+Besides the track geometry, the relevant vehicle parameters, such as the wheelbase, admissible steering angle, acceleration limits and maximum lateral acceleration, are assumed to be known. The objective is therefore to determine the vehicle states and control inputs that minimize the total lap time while ensuring that the vehicle remains within the track boundaries and satisfy all imposed constraints.
+
+The next step is to choose an appropriate mathematical model describing the vehicle dynamics. To this end, several simplifying assumptions are introduced in the following section.

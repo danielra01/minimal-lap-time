@@ -1,8 +1,7 @@
 \section{Vehicle model}
-In order to formulate our optimization problem, we first need to decide on some simplifications. The goal of this project is not to focus on the vehicular dynamics of a race car, but rather on the optimization problem itself.
+The vehicle model must capture the main relationship between steering, longitudinal motion, and the resulting trajectory while remaining sufficiently simple for the numerical optimization problem. Since this project focuses on the minimum-lap-time optimization problem rather than on detailed vehicle dynamics, we use a kinematic bicycle model.
 
-Therefore, we decided to use the commonly used kinematic bicycle model to describe the dynamics of the car.
-
+The kinematic bicycle model describes the vehicle motion using only a few states and control inputs. It is simple enough for numerical optimization while still capturing the main effects of steering and acceleration. More detailed effects, such as tire slip, load transfer, suspension motion, and transient tire forces, are neglected.
 \subsection{The bicycle model}\;\\
 The commonly used kinematic bicycle model is a simplification of the dynamics of a car. It assumes that the car has two wheels, one in the front and one in the back. Only the front wheel is used for steering and the slip angle is neglected. 
 

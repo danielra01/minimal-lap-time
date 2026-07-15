@@ -1,16 +1,11 @@
 \section{The problem setup}
-\TODO{Here we need to explain:\\
-\begin{enumerate}
-    \item What we want to do / optimize? 
-    \item Wich data we know ? 
-    \item What assumpions we use ? 
-\end{enumerate}
-}
 
-The objective of this project is to compute a trajectory that allows a race car to complete a given race track in minimum time. Unlike path-following problems, where the trajectory is prescribed in advance, both the trajectory and the control inputs are optimized while satisfying the physical limitations of the vehicle.
+The objective of this project is to compute the minimum-time trajectory for a race car on a closed racing circuit. Unlike conventional path-following problems, where the trajectory is predefined, both the vehicle trajectory and the control inputs are optimized simultaneously while satisfying the physical limitations of the vehicle and the geometric constraints imposed by the track.
 
-The optimization is carried out on a racing track located in Freiburg. The image of the track is processed to extract the boundaries, from which the centerline is obtained. Using this centerline, we compute the curvature profile and determine the track width along the circuit. These quantities provide a mathematical description of the track and serve as the geometric input for the optimization problem.
+The optimization is performed on a real karting circuit located in Freiburg. The track geometry is represented by its centerline, local curvature and track width, which constitute the geometric input to the optimal control problem. These quantities are obtained by processing an image of the circuit and extracting its boundaries.
 
-Besides the track geometry, the relevant vehicle parameters, such as the wheelbase, admissible steering angle, acceleration limits and maximum lateral acceleration, are assumed to be known. The objective is therefore to determine the vehicle states and control inputs that minimize the total lap time while ensuring that the vehicle remains within the track boundaries and satisfy all imposed constraints.
+Besides the track geometry, the relevant vehicle parameters are assumed to be known. These include the wheelbase, steering angle limits, longitudinal acceleration and braking limits, and the maximum admissible lateral acceleration. Together, these parameters define the dynamic and physical constraints of the optimization problem.
 
-The next step is to choose an appropriate mathematical model describing the vehicle dynamics. To this end, several simplifying assumptions are introduced in the following section.
+The objective is therefore to determine the state and control trajectories that minimize the total lap time while ensuring that the vehicle remains within the track boundaries and satisfies all vehicle constraints.
+
+To formulate this optimal control problem, an appropriate mathematical model of the vehicle is required. In the following section, a simplified kinematic bicycle model is introduced together with the assumptions adopted throughout this work.

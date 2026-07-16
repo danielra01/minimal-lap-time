@@ -3,28 +3,85 @@ The vehicle model must capture the main relationship between steering, longitudi
 
 The kinematic bicycle model describes the vehicle motion using only a few states and control inputs. It is simple enough for numerical optimization while still capturing the main effects of steering and acceleration. More detailed effects, such as tire slip, load transfer, suspension motion, and transient tire forces, are neglected.
 \subsection{The bicycle model}\;\\
-The commonly used kinematic bicycle model is a simplification of the dynamics of a car. It assumes that the car has two wheels, one in the front and one in the back. Only the front wheel is used for steering and the slip angle is neglected. 
+The commonly used kinematic bicycle model is a simplification of the dynamics of a car. It represents the two wheels of each axle by a single equivalent wheel, resulting in one front wheel and one rear wheel. Only the front wheel is used for steering, and tire slip is neglected.
 
-The model is described by the position of the car in global coordinates $(x,y)$, the velocity $v$, the heading $\psi$ and the steering angle $\delta$. The dynamics of the model are given as
+The model is described by the position of the car in global coordinates $(x,y)$, the velocity $v$, the heading $\psi$, and the steering angle $\delta$. The dynamics of the model are given by
 \begin{align*}
     \dot{x} &= v \cos(\psi) \\
     \dot{y} &= v \sin(\psi) \\
     \dot{\psi} &= \frac{v}{L} \tan(\delta) \\
-    \dot{v} &= a.
+    \dot{v} &= a
 \end{align*}
-The constants $L$ and $a$ denote the wheelbase of the car, i.e. the distance between the front and rear wheel, and the acceleration of the car respectively. For more details on this model, see \cite{Rajamani2012}.
+The parameter $L$ denotes the wheelbase of the car, i.e. the distance between the front and rear wheel, and the acceleration of the car respectively. For more details on this model, see \cite{Rajamani2012}.
 
 However, for driving around a given track it is inconvenient to use global coordinates because it is more complicate to formulate the constraints. Additionally, we only need the position on the track and do not care for the absolute position in global coordinates.
 
 Therefore, we want to formulate the model using track coordinates. The centerline distance traveled will be given as $s$ and $e_y$ denotes the distance from the centerline, $e_\psi$ denotes the angle between the cars heading and the tangent of the centerline and $v$ still denotes the velocity of the vehicle.
 
-Now, we can split the velocity into the forward component along the track tangent given as $v \cos (e_\psi)$ and the sideways component normal to the track tangent given as $v \sin(e_\psi)$, which directly leads to $\dot{e_y}=v\sin(e_\psi)$ because the lateral offset changes exactly by the sideways component of the velocity.
-
-On a curved track, we need to take into account that a car with lateral offset to the centerline needs to travel a different distance compared to a car being on the centerline in order to achieve the same progress. This leads to the relation \TODO{EXPLAIN!}
+The position of the vehicle can be expressed relative to the track centerline as
 \begin{align*}
-    \dot s = \frac{v \cos(e_\psi)}{(1-\kappa(s)e_y)}, 
+    \mathbf{p}(t)
+    =
+    \mathbf{p}_c(s(t))
+    +
+    e_y(t)\mathbf{N}(s(t)),
 \end{align*}
-with $\kappa(s)$ being the curvature of the track at position $s$. 
+where $\mathbf{p}_c(s)$ denotes the centerline position and
+$\mathbf{N}(s)$ is its unit normal vector.
+
+Differentiating with respect to time gives
+\begin{align*}
+    \dot{\mathbf{p}}
+    &=
+    \frac{d\mathbf{p}_c}{ds}\dot{s}
+    +
+    \dot{e}_y\mathbf{N}
+    +
+    e_y\frac{d\mathbf{N}}{ds}\dot{s}.
+\end{align*}
+Using
+\begin{align*}
+    \frac{d\mathbf{p}_c}{ds}=\mathbf{T},
+    \qquad
+    \frac{d\mathbf{N}}{ds}=-\kappa(s)\mathbf{T},
+\end{align*}
+where $\mathbf{T}(s)$ is the unit tangent vector, we obtain
+\begin{align*}
+    \dot{\mathbf{p}}
+    =
+    \left(1-\kappa(s)e_y\right)\dot{s}\,\mathbf{T}
+    +
+    \dot{e}_y\,\mathbf{N}.
+\end{align*}
+
+The vehicle velocity can also be decomposed into components tangent and
+normal to the centerline:
+\begin{align*}
+    \dot{\mathbf{p}}
+    =
+    v\cos(e_\psi)\mathbf{T}
+    +
+    v\sin(e_\psi)\mathbf{N}.
+\end{align*}
+
+Equating the tangential and normal components gives
+\begin{align*}
+    \left(1-\kappa(s)e_y\right)\dot{s}
+    &=
+    v\cos(e_\psi), \\
+    \dot{e}_y
+    &=
+    v\sin(e_\psi).
+\end{align*}
+Therefore,
+\begin{align*}
+    \dot{s}
+    =
+    \frac{v\cos(e_\psi)}
+    {1-\kappa(s)e_y}.
+\end{align*}
+This relation is commonly used in Frenet-coordinate formulations of vehicle
+dynamics \cite{Reiter2023Frenet}.
 
 Now, for the heading deviation, we calculate 
 \begin{align*}

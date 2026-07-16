@@ -83,33 +83,88 @@ Therefore,
 This relation is commonly used in Frenet-coordinate formulations of vehicle
 dynamics \cite{Reiter2023Frenet}.
 
-Now, for the heading deviation, we calculate 
+The heading error is defined as
 \begin{align*}
-    e_\psi = \psi - \psi_c(s)
+    e_\psi = \psi-\psi_c(s),
 \end{align*}
-and differentiating yields
+where $\psi_c(s)$ denotes the heading of the track centerline.
+
+Differentiating with respect to time and applying the chain rule yields
 \begin{align*}
-    \dot{e}_\psi = \dot\psi - \dot{\psi}_c(s)\dot{s}.
+    \dot e_\psi
+    =
+    \dot\psi
+    -
+    \frac{d\psi_c}{ds}\dot s.
 \end{align*}
-The cars own heading with respect to the tangent of the centerline changes because of steering and the heading of the track changes because of the curvature of the track. Therefore, we get
+
+The cars own heading with respect to the tangent of the centerline changes because of steering and the heading of the track changes because of the curvature of the track.
+
+Since the derivative of the centerline heading with respect to the arc length is equal to the local track curvature,
+\begin{align*}
+    \frac{d\psi_c}{ds}=\kappa(s),
+\end{align*}
+the heading-error dynamics become
+
 \begin{align*}
     \dot e_\psi = \frac{v}{L} \tan(\delta) - \kappa(s)\dot s.
 \end{align*}
 
-This yields the following model
+This results in the following vehicle model expressed in Frenet coordinates.
+The state vector is defined as
 \begin{align*}
-    z(t) =  \begin{bmatrix}
-                s(t) \\
-                e_y(t)\\
-                e_\psi(t)\\
-                v(t)
-            \end{bmatrix}
-    \qquad \qquad 
-    \dot z(t) = \begin{bmatrix}
-                \dot s(t) \\
-                v(t) \sin(e_\psi(t))\\
-                \frac{v}{L}\tan(\delta(t)) - \kappa(s(t))\dot s(t)\\
-                a(t)
-            \end{bmatrix}
+    z(t)
+    =
+    \begin{bmatrix}
+        s(t)\\
+        e_y(t)\\
+        e_\psi(t)\\
+        v(t)
+    \end{bmatrix},
 \end{align*}
-\TODO{EXPLAIN LIMITATIONS OF THE MODEL}
+where \(s(t)\) denotes the progress along the track centerline,
+\(e_y(t)\) the lateral offset from the centerline,
+\(e_\psi(t)\) the heading error, and \(v(t)\) the vehicle velocity.
+
+The control vector is given by
+\begin{align*}
+    u(t)
+    =
+    \begin{bmatrix}
+        a(t)\\
+        \delta(t)
+    \end{bmatrix},
+\end{align*}
+where \(a(t)\) is the longitudinal acceleration and \(\delta(t)\) is the
+steering angle.
+
+The state dynamics can then be written compactly as
+\begin{align*}
+    \dot z(t)
+    =
+    f\bigl(z(t),u(t)\bigr)
+    =
+    \begin{bmatrix}
+        \dfrac{v(t)\cos(e_\psi(t))}
+        {1-\kappa(s(t))e_y(t)}
+        \\[3ex]
+        v(t)\sin(e_\psi(t))
+        \\[1.5ex]
+        \dfrac{v(t)}{L}\tan(\delta(t))
+        -
+        \kappa(s(t))
+        \dfrac{v(t)\cos(e_\psi(t))}
+        {1-\kappa(s(t))e_y(t)}
+        \\[1.5ex]
+        a(t)
+    \end{bmatrix}.
+\end{align*}
+
+The kinematic bicycle model neglects tire slip, load transfer,
+suspension dynamics and transient tire forces.
+Consequently, it is not intended to accurately describe the vehicle behaviour
+at the limits of adhesion.
+
+Nevertheless, it captures the main relationship between steering,
+longitudinal acceleration and the resulting vehicle trajectory while keeping
+the optimization problem sufficiently simple.

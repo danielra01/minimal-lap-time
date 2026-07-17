@@ -1,20 +1,15 @@
 \section{Optimization Problem}
 \subsection{Formulation of the optimization problem}\;\\
-\TODO{We need to expand the section explaining carefully: 
-\begin{enumerate}
-    \item Decision variables
-    \item Objective
-    \item Constraints
-    \item Boundary conditions
-\end{enumerate}
-}
+Using the vehicle model introduced in the previous section, the minimum-lap-time problem can be formulated as a continuous-time optimal control problem. The decision variables are the state trajectory $z(\cdot)$, the control trajectory $u(\cdot)$, and the final time $T$.
 
-In order to formulate the optimization problem, we need to have some controls of the car. These are given as 
+The control vector
 \begin{align*}
     u(t) = \begin{bmatrix} a(t) \\ \delta(t) \end{bmatrix}
 \end{align*}
-with $a$ being the acceleration and $\delta$ being the steering angle. With this, we can finally formulate the optimization problem.
-Using the model above, we can formulate the problem as follows
+contains the longitudinal acceleration and the steering angle.
+
+The objective is to minimize the total time required to complete the track. 
+The resulting optimal control problem is
 \begin{align}
     \underset{z(\cdot),\,u(\cdot),\,T}{\operatorname{minimize}}
     \quad & T
@@ -22,62 +17,96 @@ Using the model above, we can formulate the problem as follows
     \\[0.5em]
     \text{subject to}
     \quad
-    & \dot{z}(t) = \begin{bmatrix}
-                \dot s(t) \\
-                v(t) \sin(e_\psi(t))\\
-                \frac{v}{L}\tan(\delta(t)) - \kappa(s(t))\dot s(t)\\
-                a(t)
-            \end{bmatrix} =: f\big(z(t),u(t)\big),
-    & t \in [0,T],
+    & \dot{z}(t)
+    =
+    f\bigl(z(t),u(t)\bigr),
+    && t\in[0,T],
     \label{eq:dynamics}
     \\[0.3em]
-    & -\frac{w\big(s(t)\big)-b}{2}
-      \leq e_y(t)
-      \leq
-      \frac{w\big(s(t)\big)-b}{2},
+    & -\frac{w\bigl(s(t)\bigr)-b}{2}
+    \leq e_y(t)
+    \leq
+    \frac{w\bigl(s(t)\bigr)-b}{2},
+    && t\in[0,T],
     \label{eq:track_constraint}
     \\[0.3em]
-    & -a_{\min} \leq a(t) \leq a_{\max},
+    & -a_{\min}
+    \leq a(t)
+    \leq a_{\max},
+    && t\in[0,T],
     \label{eq:acceleration_constraint}
     \\[0.3em]
-    & -\delta_{\max} \leq \delta(t) \leq \delta_{\max},
+    & -\delta_{\max}
+    \leq \delta(t)
+    \leq \delta_{\max},
+    && t\in[0,T],
     \label{eq:steering_constraint}
     \\[0.3em]
-    & 0 \leq v(t) \leq v_{\max},
+    & 0
+    \leq v(t)
+    \leq v_{\max},
+    && t\in[0,T],
     \label{eq:velocity_constraint}
     \\[0.3em]
-    & \left|
-        \frac{v(t)^2}{L}\tan\big(\delta(t)\big)
-      \right|
-      \leq a_{y,\max},
+    & -a_{y,\max}
+    \leq
+    \frac{v(t)^2}{L}\tan\bigl(\delta(t)\bigr)
+    \leq
+    a_{y,\max},
+    && t\in[0,T],
     \label{eq:lateral_acceleration_constraint}
+    \\[0.3em]
+    & 1-\kappa\bigl(s(t)\bigr)e_y(t)>0,
+    && t\in[0,T],
+    \label{eq:frenet_validity_constraint}
     \\[0.3em]
     & s(0)=0,
     \qquad
-      s(T)=S,
+    s(T)=S,
     \label{eq:position_boundary_conditions}
     \\[0.3em]
     & v(0)=0,
     \qquad
-      e_y(0)=0,
+    e_y(0)=0,
     \qquad
-      e_\psi(0)=0.
+    e_\psi(0)=0,
     \label{eq:initial_conditions}
+    \\[0.3em]
+    & T>0.
+    \label{eq:time_constraint}
 \end{align}
 
-The constants used in the definition of the optimization problem are defined as follows:
+The parameters appearing in the optimal control problem are defined as follows:
 \begin{description}
-    \item[\(w(s)\)] track width at the longitudinal position \(s\),
-    \item[\(b\)] width of the vehicle,
-    \item[\(L\)] wheelbase of the vehicle,
-    \item[\(a_{\min}\)] magnitude of the maximum permissible deceleration,
-    \item[\(a_{\max}\)] maximum permissible acceleration,
+    \item[\(w(s)\)] track width at centerline position \(s\),
+    \item[\(b\)] vehicle width,
+    \item[\(L\)] vehicle wheelbase,
+    \item[\(a_{\min}>0\)] magnitude of the maximum permissible deceleration,
+    \item[\(a_{\max}>0\)] maximum permissible acceleration,
     \item[\(\delta_{\max}\)] maximum absolute steering angle,
     \item[\(v_{\max}\)] maximum permissible velocity,
     \item[\(a_{y,\max}\)] maximum permissible lateral acceleration,
-    \item[\(S\)] total length of the track.
+    \item[\(S\)] total centerline length of the track.
 \end{description}
 
+The objective function~\eqref{eq:objective} minimizes the final time $T$.
+The dynamic constraint~\eqref{eq:dynamics} ensures that the state trajectory
+is consistent with the kinematic bicycle model.
+
+The track constraint~\eqref{eq:track_constraint} restricts the center of the
+vehicle to the usable track width. The vehicle width $b$ is subtracted from
+the track width so that the complete vehicle, rather than only its reference
+point, remains inside the track boundaries.
+
+The acceleration, steering, and velocity constraints
+\eqref{eq:acceleration_constraint}--\eqref{eq:velocity_constraint} represent
+the longitudinal and kinematic limitations of the vehicle. The lateral
+acceleration constraint~\eqref{eq:lateral_acceleration_constraint} limits the
+cornering acceleration generated by the steering input.
+
+The boundary conditions require the vehicle to start at the beginning of the
+track and reach the total centerline distance $S$. In the present formulation,
+the vehicle starts from rest at the centerline with zero heading error.
 
 
 

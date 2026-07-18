@@ -1,9 +1,64 @@
 \section{Numerical solution}
-\TODO{We need to cover here: 
-\begin{enumerate}
-    \item Discretization
-    \item Multiple-shooting
-    \item CasAdi
-    \item IPOPT (or other solver use)
-\end{enumerate}
-}
+
+The optimal control problem is solved using a direct multiple shooting approach \cite{bock1984multiple}. The total lap time \(T\) is considered as an optimization variable and the time horizon is divided into \(N=200\) intervals of equal duration,
+
+\begin{equation}
+    \Delta t = \frac{T}{N}.
+\end{equation}
+
+The state vector
+
+\[
+Z_k=[s_k,e_{y,k},e_{\psi,k},v_k]^{\mathrm T}
+\]
+
+is defined at each of the \(N+1\) shooting nodes, while the control vector
+
+\[
+U_k=[a_k,\delta_k]^{\mathrm T}
+\]
+
+is assumed to remain constant over each interval.
+
+To propagate the vehicle dynamics between two consecutive shooting nodes, a classical fourth-order Runge--Kutta (RK4) integration scheme is used. For each interval,
+
+\begin{align}
+    K_1 &= f(Z_k,U_k),\\
+    K_2 &= f\left(Z_k+\frac{\Delta t}{2}K_1,U_k\right),\\
+    K_3 &= f\left(Z_k+\frac{\Delta t}{2}K_2,U_k\right),\\
+    K_4 &= f\left(Z_k+\Delta t K_3,U_k\right),
+\end{align}
+
+and the state at the next node is approximated by
+
+\begin{equation}
+    \widehat{Z}_{k+1}
+    =
+    Z_k
+    +
+    \frac{\Delta t}{6}
+    \left(
+        K_1+2K_2+2K_3+K_4
+    \right).
+\end{equation}
+
+The continuity of the trajectory is enforced by requiring the optimization variables to satisfy
+
+\begin{equation}
+    Z_{k+1}=\widehat{Z}_{k+1},
+    \qquad k=0,\ldots,N-1.
+\end{equation}
+
+The optimization problem is implemented in Python using the CasADi framework and its \texttt{Opti} interface \cite{andersson2019casadi}. CasADi provides symbolic modelling, automatic differentiation and a convenient interface to nonlinear optimization solvers. The track curvature is evaluated through a one-dimensional linear interpolant so that \(\kappa(s)\) can be computed for any optimized position along the track.
+
+The resulting nonlinear programming problem is solved with IPOPT \cite{wachter2006ipopt}. In the present implementation, the maximum number of iterations is set to 3000, with a convergence tolerance of \(10^{-7}\) and an acceptable tolerance of \(10^{-5}\).
+
+As nonlinear optimization is sensitive to the initial guess, a simple physically meaningful initialization is provided. The vehicle is assumed to accelerate from rest to a constant cruising speed, while the initial steering angle is estimated from the centerline curvature as
+
+\begin{equation}
+    \delta_k^{(0)}
+    =
+    \arctan\left(L\kappa(s_k^{(0)})\right).
+\end{equation}
+
+The initial lateral displacement and heading error are both set to zero, meaning that the initial trajectory follows the track centerline.

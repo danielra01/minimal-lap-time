@@ -1,5 +1,6 @@
 \section{Results}
 
+\subsection{Original formulation}\;\\
 The optimization problem was solved using \(N=200\) shooting intervals. IPOPT converged successfully after 357 iterations, requiring approximately \(8.0~\mathrm{s}\) of computation time. The solver returned the status \texttt{Solve\_Succeeded}. The optimal lap time obtained was
 
 \begin{equation}
@@ -61,9 +62,38 @@ The optimal velocity profile is presented in Figure~\ref{fig:velocity}. The kart
 The longitudinal acceleration varies between \(-6.0\) and \(3.0~\mathrm{m/s^2}\), while the lateral acceleration reaches the imposed limits of \(\pm8.0~\mathrm{m/s^2}\). This indicates that both the longitudinal and lateral capabilities of the vehicle are fully exploited during the lap. The steering angle remains within the prescribed bounds, ranging from \(-0.600\) to \(0.126~\mathrm{rad}\).
 
 Finally, the minimum value of the Frenet-coordinate denominator is
-
 \[
 \min(1-\kappa e_y)=0.6827,
 \]
 
 which remains well above zero throughout the optimization. Therefore, the computed trajectory stays within the valid region of the Frenet-coordinate formulation.
+
+\subsection{Extended formulation}\;\\
+For the extended formulation, seven static obstacles were placed along the track. Their positions were chosen on the centerline at locations where the optimal trajectory of the original formulation crosses the track centerline, requiring the optimizer to generate meaningful avoidance maneuvers. The vehicle and track parameters remained identical to those used in the original formulation. Each obstacle was assigned a length of \(1.5~\mathrm{m}\) and a width of \(0.8~\mathrm{m}\), together with a safety margin of \(0.2~\mathrm{m}\). To improve the solution quality in the presence of the additional constraints, the number of discretization intervals was increased to \(N=300\).
+
+Figure~\ref{fig:track_with_obstacles} shows the optimized trajectory together with the obstacle safety regions. The vehicle successfully avoids all seven obstacles while remaining within the track boundaries. A detailed view of several obstacle locations is presented in Figure~\ref{fig:track_with_obstacles_close}, where the local trajectory modifications required for obstacle avoidance can be observed more clearly.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.70\linewidth]{images/track_optimzed_traj_obst.png}
+    \caption{Track geometry with static obstacles.}
+    \label{fig:track_with_obstacles}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.70\linewidth]{images/track_optimzed_traj_obst_close.png}
+    \caption{Close-up of the optimized trajectory near several obstacles.}
+    \label{fig:track_with_obstacles_close}
+\end{figure}
+
+The comparison of the lateral position profiles in Figure~\ref{fig:opt_lat_pos_compare} shows that the additional constraints affect the trajectory only locally. Away from the obstacles, the solution closely follows that of the original formulation, while noticeable changes in the lateral position occur only in the vicinity of the obstacle locations.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.70\linewidth]{images/opt_lat_pos_compare.png}
+    \caption{Comparison of optimal lateral position.}
+    \label{fig:opt_lat_pos_compare}
+\end{figure}
+
+Overall, the optimized solution remains very similar to that of the original formulation. The optimal lap time increases only slightly, from \(61.665~\mathrm{s}\) to \(61.800~\mathrm{s}\), while both the maximum and average velocities remain nearly unchanged. This indicates that the additional obstacle avoidance constraints have only a minor impact on the overall performance.

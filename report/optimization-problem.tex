@@ -109,4 +109,28 @@ track and reach the total centerline distance $S$. In the present formulation,
 the vehicle starts from rest at the centerline with zero heading error.
 
 
+\subsection{Extension: Static obstacle avoidance.}\;\\
+So far, the optimization problem only considers the track boundaries and vehicle limitations. In practical racing scenarios, however, additional objects may occupy parts of the track. To account for such situations, the formulation can be extended by introducing static obstacles represented in Frenet coordinates.
 
+The positions of the obstacles are assumed to be known in advance and are specified in Frenet coordinates. For each obstacle $i=1,\ldots,N_{\mathrm{obs}}$, the centerline position is denoted by $s_i$ and the lateral offset by $e_{y,i}$. Furthermore, each obstacle is assigned a length $l_i$ and a width $w_i$.
+
+To account for the finite dimensions of both the obstacle and the vehicle, together with an additional safety margin, each obstacle is surrounded by an elliptical safety region. The corresponding semi-axes in the longitudinal and lateral directions are defined as
+\begin{align*}
+    & r_{s,i}=\frac{l_i}{2}+\frac{L}{2}+d_{\mathrm{safe}},
+    \\
+    & r_{e_y,i}=\frac{w_i}{2}+\frac{b}{2}+d_{\mathrm{safe}},
+\end{align*}
+where $L$ denotes the vehicle wheelbase, $b$ its width, and $d_{\mathrm{safe}}$ the prescribed safety margin.
+
+For every obstacle, the vehicle is required to remain outside the corresponding safety region. This requirement is enforced by introducing the nonlinear constraint
+\begin{align}
+\left(\frac{s-s_i}{r_{s,i}}\right)^2
++
+\left(\frac{e_y-e_{y,i}}{r_{e_y,i}}\right)^2
+\ge 1,
+\qquad i=1,\ldots,N_{\mathrm{obs}}.
+\end{align}
+
+Since the optimization problem is solved on a discrete time grid, obstacle avoidance constraints are additionally evaluated at the midpoint of every integration interval. This improves collision detection between consecutive discretization nodes while avoiding the computational expense of using a much finer discretization.
+
+This extension illustrates how additional practical constraints can be integrated into the optimal control formulation without modifying the underlying vehicle model.

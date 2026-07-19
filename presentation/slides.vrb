@@ -1,0 +1,24 @@
+\frametitle{SGD Implementation (Mini-batch) --- II}
+
+    \small
+    \textbf{Numerical stability (softmax).}\;
+    Given scores $S\in\mathbb{R}^{B\times 10}$, we compute
+    \[
+    \operatorname{softmax}(S)_{i\ell}
+    =
+    \frac{\exp\big(S_{i\ell}-m_i\big)}{\sum_{r=0}^{9}\exp\big(S_{ir}-m_i\big)},
+    \qquad
+    m_i=\max_{0\le r\le 9} S_{ir},
+    \]
+    which avoids overflow in $\exp(\cdot)$.
+
+    \vspace{0.2cm}
+    \textbf{Pseudo-code (one epoch).}
+    \begin{lstlisting}[language=Python]
+    perm = rng.permutation(N)
+    for start in range(0, N, B):
+        idx = perm[start:start+B]
+        dW, db = gradients(W, b, A[idx], y[idx], l2_reg=lambda_)
+        W -= eta * dW
+        b -= eta * db
+    \end{lstlisting}

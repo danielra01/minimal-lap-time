@@ -246,12 +246,26 @@
     \end{columns}
     \end{frame}
 
+    \begin{frame}{Extension: Static Obstacle Avoidance}
+        \centering
+        \includegraphics[
+        width=0.90\textwidth,
+        height=0.72\textheight,
+        keepaspectratio
+        ]{images/track_optimzed_traj_obst.png}
+        \vspace{0.1cm}
+        \small
+        \\
+        The optimized trajectory deviates only locally to avoid the obstacles, increasing the lap time from \(61.665~\mathrm{s}\) to \(61.800~\mathrm{s}\).
+    \end{frame}
+
     \begin{frame}{Conclusions}
     \begin{itemize}
         \item The optimal control problem was successfully solved using direct multiple shooting.
         \item The optimized trajectory uses almost the full available track width.
         \item The kart reaches the maximum speed on the straights and slows down in the most demanding corners.
         \item The resulting minimum lap time is \(61.665~\mathrm{s}\).
+        \item The proposed formulation was successfully extended to include static obstacle avoidance.
     \end{itemize}
     \vspace{0.3cm}
     \begin{block}{Main result}

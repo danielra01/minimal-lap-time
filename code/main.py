@@ -455,3 +455,12 @@ plt.grid(True)
 plt.legend()
 plt.tight_layout()
 plt.show()
+
+# Save result to compare
+np.savez(
+    "results_baseline.npz",
+    s=s_opt,
+    e_y=e_y_opt,
+    v=v_opt,
+    total_time=T_opt
+)

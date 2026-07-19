@@ -28,11 +28,11 @@ track_width = 7.0           # w [m]
 usable_half_width = (track_width - vehicle_width) / 2.0
 
 # Static obstacle in Frenet coordinates
-obstacle_s = np.arange(0.1, 1.0, 0.1) * S       # position along the centerline [m]
-num_obstacles = len(obstacle_s)                  # number of obstacles
-obstacle_e_y = np.zeros(num_obstacles)           # lateral offset from the centerline [m]
-obstacle_length = np.full(num_obstacles, 1.5)    # obstacle length along the track [m]
-obstacle_width = np.full(num_obstacles, 0.8)     # obstacle width across the track [m]
+obstacle_s = np.array([0.20, 0.30, 0.47, 0.54, 0.65, 0.79, 0.87]) * S  # position along the centerline [m]
+num_obstacles = len(obstacle_s)                                        # number of obstacles
+obstacle_e_y = np.zeros(num_obstacles)                                 # lateral offset from the centerline [m]
+obstacle_length = np.full(num_obstacles, 1.5)                          # obstacle length along the track [m]
+obstacle_width = np.full(num_obstacles, 0.8)                           # obstacle width across the track [m]
 
 # Effective obstacle radii including vehicle dimensions and safety margin
 obstacle_radius_s = (0.5 * obstacle_length + 0.5 * wheelbase + safety_margin)
@@ -181,6 +181,7 @@ frenet_margin = 1e-3
 kappa_nodes = kappa_fun(s)
 opti.subject_to(1.0 - kappa_nodes * e_y >= frenet_margin)
 
+# Obstacle avoidance constraints
 for i in range(num_obstacles):
     obstacle_metric = (
         ((s - obstacle_s[i]) / obstacle_radius_s[i]) ** 2

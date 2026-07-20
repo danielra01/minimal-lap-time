@@ -247,6 +247,43 @@
     \end{frame}
 
     \begin{frame}{Extension: Static Obstacle Avoidance}
+        \vspace{0.3cm}
+        \textbf{Effective obstacle radii}
+        \[
+        r_{s,i}=\frac{l_i}{2}+\frac{L}{2}+d_{\mathrm{safe}},
+        \qquad
+        r_{e_y,i}=\frac{w_i}{2}+\frac{b}{2}+d_{\mathrm{safe}}, 
+        \qquad
+        i=1,\ldots,N_{\mathrm{obs}}
+        \]
+
+        {\scriptsize
+        $l_i$, $w_i$ -- obstacle length and width, $L$, $b$ -- vehicle wheelbase and width, 
+        $d_{\mathrm{safe}}$ -- safety margin.
+        }
+
+        \vspace{0.3cm}
+
+        \textbf{Collision avoidance}
+
+        \[
+        \left(\frac{s-s_i}{r_{s,i}}\right)^2
+        +
+        \left(\frac{e_y-e_{y,i}}{r_{e_y,i}}\right)^2
+        \ge 1,
+        \qquad
+        i=1,\ldots,N_{\mathrm{obs}}
+        \]
+
+        \vspace{0.3cm}
+
+        \begin{itemize}
+            \item Obstacles are represented by elliptical safety regions in Frenet coordinates.
+            \item Constraints are evaluated at shooting nodes and interval midpoints.
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Optimized Trajectory with Obstacles}
         \centering
         \includegraphics[
         width=0.90\textwidth,

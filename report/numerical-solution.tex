@@ -30,7 +30,6 @@ To propagate the vehicle dynamics between two consecutive shooting nodes, a clas
 \end{align}
 
 and the state at the next node is approximated by
-
 \begin{equation}
     \widehat{Z}_{k+1}
     =
@@ -43,11 +42,12 @@ and the state at the next node is approximated by
 \end{equation}
 
 The continuity of the trajectory is enforced by requiring the optimization variables to satisfy
-
 \begin{equation}
     Z_{k+1}=\widehat{Z}_{k+1},
     \qquad k=0,\ldots,N-1.
 \end{equation}
+
+The same RK4 integration scheme is also used to compute the midpoint state required for obstacle avoidance by integrating the vehicle dynamics over a half time step, $\Delta t/2$.
 
 The optimization problem is implemented in Python using the CasADi framework and its \texttt{Opti} interface \cite{andersson2019casadi}. CasADi provides symbolic modelling, automatic differentiation and a convenient interface to nonlinear optimization solvers. The track curvature is evaluated through a one-dimensional linear interpolant so that \(\kappa(s)\) can be computed for any optimized position along the track.
 

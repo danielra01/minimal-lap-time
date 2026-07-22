@@ -149,12 +149,9 @@ url=true]{biblatex}
 		top=0cm
 	}
 	\begin{abstract}
-    %Example of an abstract from other project 
-	%This report studies hand-written digit classification on the \emph{sklearn} Digits dataset using multinomial logistic regression trained with gradient-based methods. We cast training as a finite-sum convex optimization problem and compare full-batch gradient descent (full-GD) against mini-batch stochastic gradient descent (SGD) in terms of objective decrease, validation/test accuracy, and wall-clock time.
-
-	%Based on systematic hyperparameter sweeps, we observe that SGD reaches high validation accuracy in substantially less wall-clock time, while full-GD exhibits smoother, deterministic objective trajectories but incurs higher per-iteration cost. Both approaches achieve strong test performance, with SGD providing the best time-to-accuracy trade-off in our experimental setup.
-
-	%This report documents the final project for the lecture \emph{Basics in Applied Mathematics}, offered in the winter term 2025/2026 within the master’s program \emph{Mathematics in Data and Technology} at the University of Freiburg.
+    This report studies minimum-lap-time trajectory optimization for a vehicle on a closed racing track. The problem is formulated using a kinematic bicycle model in Frenet coordinates and transcribed by direct multiple shooting with fourth-order Runge–Kutta integration. The resulting nonlinear optimization problem is implemented in CasADi and solved with IPOPT under track, vehicle, and control constraints.\\
+	The optimized trajectory exploits the available track width and adapts the vehicle speed to the local track curvature. The formulation is further extended to include static obstacles represented by elliptical safety regions. The resulting trajectory successfully avoids all obstacles while causing only a small increase in the optimal lap time.\\
+	This report documents the final project for the lecture \emph{Numerical Optimization}, offered in the summer term 2026 within the master’s program \emph{Mathematics in Data and Technology} at the University of Freiburg.
 	\end{abstract}
 	
 	
